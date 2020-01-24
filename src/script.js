@@ -5,6 +5,9 @@
 class DrumMachine extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            currentInstrument: ''
+        }
     }
 
     // need to loop through drumArray and create DrumPad for each one 
@@ -12,7 +15,7 @@ class DrumMachine extends React.Component {
     render() {
         return (
             // need to pass properties of each drumArray object to the DrumPad map
-            <div>
+            <div id="display">
                 <h1>Drum Machine</h1>
                 <DrumPadArray drumInfoArray={drumInfoArray}/>
             </div>
@@ -23,7 +26,7 @@ class DrumMachine extends React.Component {
 const DrumPadArray = ({drumInfoArray}) => (
     <div>
         {drumInfoArray.map(drumPad => (
-            <DrumPad key={drumPad.KC} keyboardInput={drumPad.key}/>
+            <DrumPad key={drumPad.KC} id={drumPad.KC} keyCode={drumPad.KC} keyboardInput={drumPad.key} audio={drumPad.link}/>
         ))}
     </div>
 );
@@ -32,11 +35,32 @@ class DrumPad extends React.Component {
     constructor(props) {
         super(props)
         // DrumPad needs to take props handed from DrumMachine, expecting key, link and KC properties
+        this.handleClick = this.handleClick.bind(this);
+        this.handleKeypress = this.handleKeypress.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeypress)
+    }
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeypress)
+    }
+
+    handleClick() {
+        $("#"+this.props.keyboardInput).trigger("play");
+    }
+    handleKeypress(event) {
+        if(event.keyCode === this.props.keyCode) {
+            $("#"+this.props.keyboardInput).trigger("play");
+        }
     }
 
     render() {
         return(
-            <div className="drum-pad">{this.props.keyboardInput}</div>
+            <div id={this.props.id} className="drum-pad" onClick={this.handleClick}>
+                <button>{this.props.keyboardInput}</button>
+                <audio className="clip" id={this.props.keyboardInput} src={this.props.audio}></audio>
+            </div>
         )
     }
 }

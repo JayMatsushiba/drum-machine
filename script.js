@@ -14,7 +14,12 @@ var DrumMachine = function (_React$Component) {
     function DrumMachine(props) {
         _classCallCheck(this, DrumMachine);
 
-        return _possibleConstructorReturn(this, (DrumMachine.__proto__ || Object.getPrototypeOf(DrumMachine)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (DrumMachine.__proto__ || Object.getPrototypeOf(DrumMachine)).call(this, props));
+
+        _this.state = {
+            currentInstrument: ''
+        };
+        return _this;
     }
 
     // need to loop through drumArray and create DrumPad for each one 
@@ -26,7 +31,7 @@ var DrumMachine = function (_React$Component) {
                 // need to pass properties of each drumArray object to the DrumPad map
                 React.createElement(
                     'div',
-                    null,
+                    { id: 'display' },
                     React.createElement(
                         'h1',
                         null,
@@ -47,7 +52,7 @@ var DrumPadArray = function DrumPadArray(_ref) {
         'div',
         null,
         drumInfoArray.map(function (drumPad) {
-            return React.createElement(DrumPad, { key: drumPad.KC, keyboardInput: drumPad.key });
+            return React.createElement(DrumPad, { key: drumPad.KC, id: drumPad.KC, keyCode: drumPad.KC, keyboardInput: drumPad.key, audio: drumPad.link });
         })
     );
 };
@@ -58,17 +63,48 @@ var DrumPad = function (_React$Component2) {
     function DrumPad(props) {
         _classCallCheck(this, DrumPad);
 
-        return _possibleConstructorReturn(this, (DrumPad.__proto__ || Object.getPrototypeOf(DrumPad)).call(this, props));
         // DrumPad needs to take props handed from DrumMachine, expecting key, link and KC properties
+        var _this2 = _possibleConstructorReturn(this, (DrumPad.__proto__ || Object.getPrototypeOf(DrumPad)).call(this, props));
+
+        _this2.handleClick = _this2.handleClick.bind(_this2);
+        _this2.handleKeypress = _this2.handleKeypress.bind(_this2);
+        return _this2;
     }
 
     _createClass(DrumPad, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            document.addEventListener("keydown", this.handleKeypress);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            document.removeEventListener("keydown", this.handleKeypress);
+        }
+    }, {
+        key: 'handleClick',
+        value: function handleClick() {
+            $("#" + this.props.keyboardInput).trigger("play");
+        }
+    }, {
+        key: 'handleKeypress',
+        value: function handleKeypress(event) {
+            if (event.keyCode === this.props.keyCode) {
+                $("#" + this.props.keyboardInput).trigger("play");
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
                 'div',
-                { className: 'drum-pad' },
-                this.props.keyboardInput
+                { id: this.props.id, className: 'drum-pad', onClick: this.handleClick },
+                React.createElement(
+                    'button',
+                    null,
+                    this.props.keyboardInput
+                ),
+                React.createElement('audio', { className: 'clip', id: this.props.keyboardInput, src: this.props.audio })
             );
         }
     }]);
