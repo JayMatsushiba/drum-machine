@@ -8,22 +8,58 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var drumArray = [{ Q: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3', KC: 81 }, { W: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3', KC: 87 }, { E: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3', KC: 69 }, { A: 'https://s3.amazonaws.com/freecodecamp/drums/Bld_H1.mp3', KC: 65 }, { S: "https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3", KC: 83 }, { D: 'https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3', KC: 68 }, { Z: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3', KC: 90 }, { X: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3', KC: 88 }, { C: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3', KC: 67 }];
+var DrumMachine = function (_React$Component) {
+    _inherits(DrumMachine, _React$Component);
 
-var DrumPad = function (_React$Component) {
-    _inherits(DrumPad, _React$Component);
+    function DrumMachine(props) {
+        _classCallCheck(this, DrumMachine);
+
+        return _possibleConstructorReturn(this, (DrumMachine.__proto__ || Object.getPrototypeOf(DrumMachine)).call(this, props));
+    }
+
+    // need to loop through drumArray and create DrumPad for each one 
+
+    _createClass(DrumMachine, [{
+        key: 'render',
+        value: function render() {
+            return (
+                // need to pass properties of each drumArray object to the DrumPad map
+                React.createElement(
+                    'div',
+                    null,
+                    React.createElement(
+                        'h1',
+                        null,
+                        'Drum Machine'
+                    ),
+                    React.createElement(DrumPadArray, { drumInfoArray: drumInfoArray })
+                )
+            );
+        }
+    }]);
+
+    return DrumMachine;
+}(React.Component);
+
+var DrumPadArray = function DrumPadArray(_ref) {
+    var drumInfoArray = _ref.drumInfoArray;
+    return React.createElement(
+        'div',
+        null,
+        drumInfoArray.map(function (drumPad) {
+            return React.createElement(DrumPad, { key: drumPad.KC, keyboardInput: drumPad.key });
+        })
+    );
+};
+
+var DrumPad = function (_React$Component2) {
+    _inherits(DrumPad, _React$Component2);
 
     function DrumPad(props) {
         _classCallCheck(this, DrumPad);
 
-        var _this = _possibleConstructorReturn(this, (DrumPad.__proto__ || Object.getPrototypeOf(DrumPad)).call(this, props));
-
-        _this.handleClick = function (e) {
-            console.log('you hit the snare');
-        };
-
-        _this.handleClick = _this.handleClick.bind(_this);
-        return _this;
+        return _possibleConstructorReturn(this, (DrumPad.__proto__ || Object.getPrototypeOf(DrumPad)).call(this, props));
+        // DrumPad needs to take props handed from DrumMachine, expecting key, link and KC properties
     }
 
     _createClass(DrumPad, [{
@@ -31,8 +67,8 @@ var DrumPad = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 'div',
-                { onClick: this.handleClick },
-                'Change colour'
+                { className: 'drum-pad' },
+                this.props.keyboardInput
             );
         }
     }]);
@@ -40,4 +76,6 @@ var DrumPad = function (_React$Component) {
     return DrumPad;
 }(React.Component);
 
-ReactDOM.render(React.createElement(DrumPad, null), document.getElementById('drum-machine'));
+var drumInfoArray = [{ key: 'Q', link: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3', KC: 81 }, { key: 'W', link: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3', KC: 87 }, { key: 'E', link: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3', KC: 69 }, { key: 'A', link: 'https://s3.amazonaws.com/freecodecamp/drums/Bld_H1.mp3', KC: 65 }, { key: 'S', link: "https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3", KC: 83 }, { key: 'D', link: 'https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3', KC: 68 }, { key: 'Z', link: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3', KC: 90 }, { key: 'X', link: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3', KC: 88 }, { key: 'C', link: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3', KC: 67 }];
+
+ReactDOM.render(React.createElement(DrumMachine, null), document.getElementById('drum-machine'));
